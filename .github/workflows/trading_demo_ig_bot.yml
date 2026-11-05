@@ -31,7 +31,7 @@ def main():
         # ATTENTION : Remplacez cet EPIC par l'EPIC exact d'un produit barrière 
         # que vous aurez récupéré depuis votre plateforme IG (ex: DAX ou EUR/USD Knock-Out).
         # L'EPIC d'un produit barrière contient généralement des indications de prix/barrière.
-        epic_barriere = "KA.D.DAX.C.IP"  # Exemple fictif d'un produit barrière (Call)
+        epic_barriere = "IX.D.DAX.OPTCALL.IP"  
         
         taille_lot = 1.0  # Taille minimale de la position
 
