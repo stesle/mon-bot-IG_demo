@@ -5,9 +5,9 @@ from trading_ig.rest import IGException
 
 def main():
     # 1. Récupération sécurisée des identifiants (Variables d'environnement / Secrets GitHub)
-    username = os.environ.get("IG_ID_DEMO")
-    password = os.environ.get("IG_PASSWORD_DEMO")
-    api_key = os.environ.get("IG_DEMO_KEY")
+    username = os.environ.get("IG_USERNAME")
+    password = os.environ.get("IG_PASSWORD")
+    api_key = os.environ.get("IG_API_KEY")
 
     # Vérification que les secrets sont bien présents
     if not username or not password or not api_key:
