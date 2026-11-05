@@ -1,63 +1,81 @@
-import os
-import sys
-from trading_ig import IGService
-from trading_ig.rest import IGException
+# bot.py
+import requests
+from config import (
+    IG_API_KEY,
+    IG_USERNAME,
+    IG_PASSWORD,
+    IG_BASE_URL,
+    BARRIER_EPIC,
+    EXPIRY_DATE,
+    DEFAULT_BARRIER_LEVEL,
+)
 
-def main():
-    # 1. Récupération sécurisée des identifiants (Variables d'environnement / Secrets GitHub)
-    username = os.environ.get("IG_USERNAME")
-    password = os.environ.get("IG_PASSWORD")
-    api_key = os.environ.get("IG_API_KEY")
+def obtenir_tokens():
+    """Authentification auprès de l'API IG pour récupérer les jetons de session."""
+    url = f"{IG_BASE_URL}/session"
+    headers = {
+        "X-IG-API-KEY": IG_API_KEY,
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+    }
+    payload = {
+        "identifier": IG_USERNAME,
+        "password": IG_PASSWORD
+    }
+    
+    response = requests.post(url, json=payload, headers=headers)
+    
+    if response.status_code == 200:
+        # Les tokens d'authentification sont renvoyés dans les en-têtes (headers)
+        cst = response.headers.get("CST")
+        x_security_token = response.headers.get("X-SECURITY-TOKEN")
+        print("Connexion réussie à l'API IG (Mode Démo).")
+        return cst, x_security_token
+    else:
+        raise Exception(f"Erreur de connexion : {response.status_code} - {response.text}")
 
-    # Vérification que les secrets sont bien présents
-    if not username or not password or not api_key:
-        print("Erreur : Les identifiants IG (Username, Password, API Key) sont manquants dans les variables d'environnement.")
-        sys.exit(1)
-
-    print("Tentative de connexion à l'API IG (Compte DEMO)...")
-
-    # 2. Initialisation de la session IG
-    ig_service = IGService(
-        username=username,
-        password=password,
-        api_key=api_key,
-        acc_type="DEMO"  # Forcé en DEMO pour vos tests
-    )
-
-    try:
-        # Création de la session active
-        ig_service.create_session()
-        print("Connexion réussie avec succès !")
-
-        # 3. Exemple de logique pour les Produits Barrières
-        # Remplacer cet EPIC par l'EPIC réel du produit barrière souhaité trouvé sur la plateforme IG
-        epic_barriere = "IX.D.DAX.OPTCALL.IP"  
-        
-        print(f"Analyse / Recherche de l'actif ou passage d'ordre sur l'EPIC : {epic_barriere}")
-
-        # Exemple de passage d'ordre (décommentez et adaptez selon vos paramètres de test)
-        # order = ig_service.create_working_order(
-        #     currency_code="EUR",
-        #     direction="BUY",
-        #     epic=epic_barriere,
-        #     expiry="DF",
-        #     force_open=True,
-        #     guaranteed_stop=True,
-        #     level=None,  # Ordre au marché
-        #     limit_level=None,
-        #     order_type="MARKET",
-        #     size=1.0,    # Taille de position minimale pour tester
-        #     stop_level=None,
-        #     time_in_force="FILL_OR_KILL"
-        # )
-        # print(f"Ordre passé avec succès ! Référence : {order}")
-
-    except IGException as e:
-        print(f"Erreur lors de la communication avec l'API IG : {e}")
-        sys.exit(1)
-    except Exception as e:
-        print(f"Une erreur inattendue est survenue : {e}")
-        sys.exit(1)
+def executer_ordre_knockout(cst, x_security_token):
+    """Passe un ordre d'achat sur l'option Knock-Out cible."""
+    url = f"{IG_BASE_URL}/positions/v2"
+    
+    headers = {
+        "X-IG-API-KEY": IG_API_KEY,
+        "CST": cst,
+        "X-SECURITY-TOKEN": x_security_token,
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+    }
+    
+    # Corps de la requête adapté aux options Knock-Out
+    order_payload = {
+        "epic": BARRIER_EPIC,
+        "expiry": EXPIRY_DATE,
+        "direction": "BUY",              # "BUY" pour un Call/Bull, "SELL" pour un Put/Bear
+        "size": 1.0,                     # Taille du contrat
+        "orderType": "MARKET",           # Ordre au marché
+        "guaranteedStop": True,          # Risque limité inhérent aux barrières
+        "barrier": DEFAULT_BARRIER_LEVEL, # Niveau de Knock-Out cible
+        "currencyCode": "EUR"
+    }
+    
+    print(f"Envoi de l'ordre sur l'EPIC : {BARRIER_EPIC} (Barrière : {DEFAULT_BARRIER_LEVEL})")
+    response = requests.post(url, json=order_payload, headers=headers)
+    
+    if response.status_code == 200:
+        data = response.json()
+        print(f"Ordre transmis avec succès ! Deal Reference : {data.get('dealReference')}")
+        return data
+    else:
+        print(f"Erreur lors du passage d'ordre : {response.status_code} - {response.text}")
+        return None
 
 if __name__ == "__main__":
-    main()
+    try:
+        # 1. Connexion et récupération des tokens
+        cst_token, security_token = obtenir_tokens()
+        
+        # 2. Exécution de l'ordre sur le produit barrière
+        executer_ordre_knockout(cst_token, security_token)
+        
+    except Exception as e:
+        print(f"Une erreur est survenue : {e}")
