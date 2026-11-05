@@ -31,7 +31,7 @@ def main():
 
         # 3. Exemple de logique pour les Produits Barrières
         # Remplacer cet EPIC par l'EPIC réel du produit barrière souhaité trouvé sur la plateforme IG
-        epic_barriere = "IX.D.DAX.DAILY.IP"  
+        epic_barriere = "IX.D.DAX.OPTCALL.IP"  
         
         print(f"Analyse / Recherche de l'actif ou passage d'ordre sur l'EPIC : {epic_barriere}")
 
