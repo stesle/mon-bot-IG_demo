@@ -29,8 +29,8 @@ jobs:
 
       - name: Lancer le script de trading
         env:
-          IG_USERNAME: ${{ secrets.IG_USERNAME }}
-          IG_PASSWORD: ${{ secrets.IG_PASSWORD }}
-          IG_API_KEY: ${{ secrets.IG_API_KEY }}
+          IG_USERNAME: ${{ secrets.IG_ID_DEMO }}
+          IG_PASSWORD: ${{ secrets.IG_PASSWORD_DEMO }}
+          IG_API_KEY: ${{ secrets.IG_DEMO_KEY }}
         run: |
           python bot.py
