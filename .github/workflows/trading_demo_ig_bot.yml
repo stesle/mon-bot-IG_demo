@@ -1,69 +1,16 @@
-import os
-import sys
-from config import BARRIER_EPIC, EXPIRY_DATE, DEFAULT_BARRIER_LEVEL
-from trading_ig import IGService
-from trading_ig.rest import IGException
+# trading_demo_ig_bot.yml
+# Fichier de configuration centralisé pour le bot de trading IG (Mode Démo)
 
-def main():
-    # 1. Récupération sécurisée des identifiants (Secrets GitHub)
-    username = os.environ.get("IG_USERNAME")
-    password = os.environ.get("IG_PASSWORD")
-    api_key = os.environ.get("IG_API_KEY")
+ig:
+  api_key: "VOTRE_API_KEY"
+  username: "VOTRE_IDENTIFIANT"
+  password: "VOTRE_MOT_DE_PASSE"
+  base_url: "https://demo-api.ig.com/gateway/rest"
 
-    if not username or not password or not api_key:
-        print("Erreur : Les identifiants IG sont manquants dans les variables d'environnement.")
-        sys.exit(1)
-
-    print("Connexion à l'API IG (Compte DEMO) pour les Produits Barrières...")
-
-    # 2. Initialisation de la session
-    ig_service = IGService(
-        username=username,
-        password=password,
-        api_key=api_key,
-        acc_type="DEMO"
-    )
-
-    try:
-        ig_service.create_session()
-        print("Connexion établie avec succès.")
-
-        # 3. Paramétrage du Produit Barrière
-        # ATTENTION : Remplacez cet EPIC par l'EPIC exact d'un produit barrière 
-        # que vous aurez récupéré depuis votre plateforme IG (ex: DAX ou EUR/USD Knock-Out).
-        # L'EPIC d'un produit barrière contient généralement des indications de prix/barrière.
-        epic_barriere = "IX.D.DAX.OPTCALL.IP"  
-        
-        taille_lot = 1.0  # Taille minimale de la position
-
-        print(f"Tentative d'ouverture d'une position sur le produit barrière : {epic_barriere}")
-
-        # 4. Passage d'un ordre d'achat sur le produit barrière
-        # Sur les produits barrières, la barrière de protection fait partie intégrante du contrat.
-        response = ig_service.create_open_position(
-            currency_code="EUR",
-            direction="BUY",          # "BUY" pour anticiper une hausse (Call) / "SELL" pour une baisse (Put)
-            epic=epic_barriere,
-            expiry="DF",              # Daily Financed (ou échéance spécifique du barrière)
-            force_open=True,
-            guaranteed_stop=True,     # Requis ou inhérent aux barrières
-            level=None,               # None pour une exécution immédiate au prix du marché
-            limit_level=None,
-            order_type="MARKET",
-            quote_id=None,
-            size=taille_lot,
-            stop_level=None,          # La barrière gère le risque maximum
-            time_in_force="FILL_OR_KILL"
-        )
-
-        print(f"Ordre barrière exécuté avec succès ! Détails : {response}")
-
-    except IGException as e:
-        print(f"Erreur API IG lors du passage d'ordre barrière : {e}")
-        sys.exit(1)
-    except Exception as e:
-        print(f"Une erreur inattendue est survenue : {e}")
-        sys.exit(1)
-
-if __name__ == "__main__":
-    main()
+trading:
+  epic: "IX.D.DAX.OPTCALL.IP"
+  DATE: "FEB-27"               # Échéance du produit barrière (ex: FEB-27)
+  BARRIER: 25730.0             # Niveau de barrière actif pour l'ordre
+  DEFAULT_BARRIERE: 25730.0    # Niveau de barrière par défaut / de référence
+  size: 1.0                    # Taille du contrat (lots)
+  direction: "BUY"             # Sens de l'opération (BUY pour Call/Bull, SELL pour Put/Bear)
