@@ -1,5 +1,6 @@
 import os
 import sys
+from config import BARRIER_EPIC, EXPIRY_DATE, DEFAULT_BARRIER_LEVEL
 from trading_ig import IGService
 from trading_ig.rest import IGException
 
