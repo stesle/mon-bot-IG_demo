@@ -1,32 +1,26 @@
-# bot.py
+import yaml
 import requests
-from config import (
-    IG_API_KEY,
-    IG_USERNAME,
-    IG_PASSWORD,
-    IG_BASE_URL,
-    BARRIER_EPIC,
-    EXPIRY_DATE,
-    DEFAULT_BARRIER_LEVEL,
-)
 
-def obtenir_tokens():
-    """Authentification auprès de l'API IG pour récupérer les jetons de session."""
-    url = f"{IG_BASE_URL}/session"
+def charger_configuration(chemin_fichier="trading_demo_ig_bot.yml"):
+    with open(chemin_fichier, "r", encoding="utf-8") as f:
+        return yaml.safe_load(f)
+
+def obtenir_tokens(config):
+    ig_conf = config["ig"]
+    url = f"{ig_conf['base_url']}/session"
     headers = {
-        "X-IG-API-KEY": IG_API_KEY,
+        "X-IG-API-KEY": ig_conf["api_key"],
         "Content-Type": "application/json",
         "Accept": "application/json"
     }
     payload = {
-        "identifier": IG_USERNAME,
-        "password": IG_PASSWORD
+        "identifier": ig_conf["username"],
+        "password": ig_conf["password"]
     }
     
     response = requests.post(url, json=payload, headers=headers)
     
     if response.status_code == 200:
-        # Les tokens d'authentification sont renvoyés dans les en-têtes (headers)
         cst = response.headers.get("CST")
         x_security_token = response.headers.get("X-SECURITY-TOKEN")
         print("Connexion réussie à l'API IG (Mode Démo).")
@@ -34,31 +28,32 @@ def obtenir_tokens():
     else:
         raise Exception(f"Erreur de connexion : {response.status_code} - {response.text}")
 
-def executer_ordre_knockout(cst, x_security_token):
-    """Passe un ordre d'achat sur l'option Knock-Out cible."""
-    url = f"{IG_BASE_URL}/positions/v2"
+def executer_ordre_knockout(config, cst, x_security_token):
+    ig_conf = config["ig"]
+    trading_conf = config["trading"]
+    
+    url = f"{ig_conf['base_url']}/positions/v2"
     
     headers = {
-        "X-IG-API-KEY": IG_API_KEY,
+        "X-IG-API-KEY": ig_conf["api_key"],
         "CST": cst,
         "X-SECURITY-TOKEN": x_security_token,
         "Content-Type": "application/json",
         "Accept": "application/json"
     }
     
-    # Corps de la requête adapté aux options Knock-Out
     order_payload = {
-        "epic": BARRIER_EPIC,
-        "expiry": EXPIRY_DATE,
-        "direction": "BUY",              # "BUY" pour un Call/Bull, "SELL" pour un Put/Bear
-        "size": 1.0,                     # Taille du contrat
-        "orderType": "MARKET",           # Ordre au marché
-        "guaranteedStop": True,          # Risque limité inhérent aux barrières
-        "barrier": DEFAULT_BARRIER_LEVEL, # Niveau de Knock-Out cible
+        "epic": trading_conf["epic"],
+        "expiry": trading_conf["DATE"],
+        "direction": trading_conf["direction"],
+        "size": trading_conf["size"],
+        "orderType": "MARKET",
+        "guaranteedStop": True,
+        "barrier": trading_conf["BARRIER"],
         "currencyCode": "EUR"
     }
     
-    print(f"Envoi de l'ordre sur l'EPIC : {BARRIER_EPIC} (Barrière : {DEFAULT_BARRIER_LEVEL})")
+    print(f"Envoi de l'ordre sur l'EPIC : {trading_conf['epic']} (Barrière : {trading_conf['BARRIER']})")
     response = requests.post(url, json=order_payload, headers=headers)
     
     if response.status_code == 200:
@@ -71,11 +66,8 @@ def executer_ordre_knockout(cst, x_security_token):
 
 if __name__ == "__main__":
     try:
-        # 1. Connexion et récupération des tokens
-        cst_token, security_token = obtenir_tokens()
-        
-        # 2. Exécution de l'ordre sur le produit barrière
-        executer_ordre_knockout(cst_token, security_token)
-        
+        config_data = charger_configuration("trading_demo_ig_bot.yml")
+        cst_token, security_token = obtenir_tokens(config_data)
+        executer_ordre_knockout(config_data, cst_token, security_token)
     except Exception as e:
         print(f"Une erreur est survenue : {e}")
