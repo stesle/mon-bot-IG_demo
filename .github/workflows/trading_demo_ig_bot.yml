@@ -2,15 +2,15 @@
 # Fichier de configuration centralisé pour le bot de trading IG (Mode Démo)
 
 ig:
-  api_key: "VOTRE_API_KEY"
-  username: "VOTRE_IDENTIFIANT"
-  password: "VOTRE_MOT_DE_PASSE"
+  api_key: "IX.D.DAX.OPTCALL.IP"
+  username: "steveL76"
+  password: "steveL76**"
   base_url: "https://demo-api.ig.com/gateway/rest"
 
 trading:
   epic: "IX.D.DAX.OPTCALL.IP"
   DATE: "FEB-27"               # Échéance du produit barrière (ex: FEB-27)
-  BARRIER: 25730.0             # Niveau de barrière actif pour l'ordre
-  DEFAULT_BARRIERE: 25730.0    # Niveau de barrière par défaut / de référence
-  size: 1.0                    # Taille du contrat (lots)
+  BARRIER: 25750.0             # Niveau de barrière actif pour l'ordre
+  DEFAULT_BARRIERE: 25750.0    # Niveau de barrière par défaut / de référence
+  size: 1.2                    # Taille du contrat (lots)
   direction: "BUY"             # Sens de l'opération (BUY pour Call/Bull, SELL pour Put/Bear)
