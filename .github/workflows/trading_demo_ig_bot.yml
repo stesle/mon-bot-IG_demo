@@ -1,5 +1,9 @@
 # trading_demo_ig_bot.yml
 # Fichier de configuration centralisé pour le bot de trading IG (Mode Démo)
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: # Permet d'afficher le bouton de lancement manuel
 
 ig:
   api_key: "IX.D.DAX.OPTCALL.IP"
