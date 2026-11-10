@@ -7,7 +7,7 @@ def charger_configuration(chemin_fichier="trading_demo_ig_bot.yml"):
 
 def obtenir_tokens(config):
     ig_conf = config["ig"]
-    url = f"{ig_conf['https://demo-api.ig.com/gateway/rest']}/session"
+    url = f"{ig_conf['base_url']}/session"
     headers = {
         "X-IG-API-KEY": ig_conf["208c91fdac17ebce7fcd019f89ff1e465864b6c3"],
         "Content-Type": "application/json",
@@ -19,6 +19,9 @@ def obtenir_tokens(config):
     }
     
     response = requests.post(url, json=payload, headers=headers)
+    
+    print(f"Statut HTTP reçu : {response.status_code}")
+    print(f"Réponse brute : {response.text}")
     
     if response.status_code == 200:
         cst = response.headers.get("CST")
