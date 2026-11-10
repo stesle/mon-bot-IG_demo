@@ -1,12 +1,8 @@
 # trading_demo_ig_bot.yml
 # Fichier de configuration centralisé pour le bot de trading IG (Mode Démo)
-on:
-  push:
-    branches: [ main ]
-  workflow_dispatch: # Permet d'afficher le bouton de lancement manuel
 
 ig:
-  api_key: "IX.D.DAX.OPTCALL.IP"
+  api_key: "208c91fdac17ebce7fcd019f89ff1e465864b6c3"
   username: "steveL76"
   password: "steveL76**"
   base_url: "https://demo-api.ig.com/gateway/rest"
