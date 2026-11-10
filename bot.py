@@ -43,17 +43,17 @@ def executer_ordre_knockout(config, cst, x_security_token):
     }
     
     order_payload = {
-        "epic": trading_conf["epic"],
-        "expiry": trading_conf["DATE"],
-        "direction": trading_conf["direction"],
-        "size": trading_conf["size"],
+        "epic": trading_conf["IX.D.DAX.OPTCALL.IP"],
+        "expiry": trading_conf["FEB-27"],
+        "direction": trading_conf["BUY"],
+        "size": trading_conf["1.2"],
         "orderType": "MARKET",
         "guaranteedStop": True,
-        "barrier": trading_conf["BARRIER"],
+        "barrier": trading_conf["25750"],
         "currencyCode": "EUR"
     }
     
-    print(f"Envoi de l'ordre sur l'EPIC : {trading_conf['epic']} (Barrière : {trading_conf['BARRIER']})")
+    print(f"Envoi de l'ordre sur l'EPIC : {trading_conf['epic']} (Barrière : {trading_conf['25750']})")
     response = requests.post(url, json=order_payload, headers=headers)
     
     if response.status_code == 200:
