@@ -7,15 +7,15 @@ def charger_configuration(chemin_fichier="trading_demo_ig_bot.yml"):
 
 def obtenir_tokens(config):
     ig_conf = config["ig"]
-    url = f"{ig_conf['base_url']}/session"
+    url = f"{ig_conf['https://demo-api.ig.com/gateway/rest']}/session"
     headers = {
-        "X-IG-API-KEY": ig_conf["api_key"],
+        "X-IG-API-KEY": ig_conf["208c91fdac17ebce7fcd019f89ff1e465864b6c3"],
         "Content-Type": "application/json",
         "Accept": "application/json"
     }
     payload = {
-        "identifier": ig_conf["username"],
-        "password": ig_conf["password"]
+        "identifier": ig_conf["steveL76"],
+        "password": ig_conf["steveL76**"]
     }
     
     response = requests.post(url, json=payload, headers=headers)
@@ -35,7 +35,7 @@ def executer_ordre_knockout(config, cst, x_security_token):
     url = f"{ig_conf['base_url']}/positions/v2"
     
     headers = {
-        "X-IG-API-KEY": ig_conf["api_key"],
+        "X-IG-API-KEY": ig_conf["208c91fdac17ebce7fcd019f89ff1e465864b6c3"],
         "CST": cst,
         "X-SECURITY-TOKEN": x_security_token,
         "Content-Type": "application/json",
