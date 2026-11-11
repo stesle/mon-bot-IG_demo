@@ -54,14 +54,14 @@ def executer_ordre_knockout(config, cst, x_security_token):
         "epic": trading_conf["epic"],
         "expiry": trading_conf["DATE"],
         "direction": trading_conf["direction"],
-        "size": trading_conf["size"],
-        "barrier": trading_conf["BARRIER"],
+        "size": float(trading_conf["size"]),
+        "barrier": float(trading_conf["BARRIER"]),
+        "level": float(trading_conf["BARRIER"]),  # Niveau d'exécution obligatoire pour l'option Knock-Out
         "currencyCode": "EUR",
-        "guaranteedStop": True,
-        "orderType": "MARKET",
+        "orderType": "LIMIT",                     # Les KO s'exécutent via un ordre de type LIMIT lié au niveau de barrière
+        "timeInForce": "EXECUTE_AND_ELIMINATE",   # Exécute immédiatement au niveau ou annule
         "forceOpen": True,
-        "guaranteedStop": True,
-        "timeInForce": "EXECUTE_AND_ELIMINATE"
+        "guaranteedStop": True
     }
     
     response = requests.post(url, json=payload, headers=headers)
