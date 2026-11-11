@@ -16,7 +16,7 @@ def obtenir_tokens(config):
         "X-IG-API-KEY": ig_conf["api_key"],
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Version": "2"
+        "Version": "2"  # Version requise pour la session
     }
     
     payload = {
@@ -30,10 +30,10 @@ def obtenir_tokens(config):
     print(f"Statut HTTP : {response.status_code}")
     print(f"Content-Type reçu : {response.headers.get('Content-Type')}")
     
-    # Si le type de contenu n'est pas du JSON, c'est que l'API IG a renvoyé du HTML
-    if "application/json" not in response.headers.get("Content-Type", ""):
-        print(f"Réponse brute reçue : {response.text[:200]}")
-        raise Exception("Erreur : L'API IG a renvoyé du HTML au lieu du JSON. Vérifie l'URL de base et ta clé API démo.")
+    # Si la réponse contient du HTML, l'authentification a échoué ou l'URL redirige
+    if "<html" in response.text.lower():
+        print(f"Extrait HTML reçu : {response.text[:300]}")
+        raise Exception("Erreur IG : L'API a renvoyé une page HTML (redirection portail). Vérifie sur le portail développeur IG (labs.ig.com) que ta clé API est active pour l'environnement Démo.")
         
     if response.status_code == 200:
         cst = response.headers.get("CST")
