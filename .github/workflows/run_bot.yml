@@ -1,9 +1,12 @@
-name: Run IG Trading Bot
+name: Run IG Trading Bot 24/7
 
 on:
   push:
     branches: [ main ]
-  workflow_dispatch: # Affiche le bouton de lancement manuel
+  workflow_dispatch:
+  schedule:
+    # Exécution toutes les heures, 24h/24 et 7j/7
+    - cron: '0 * * * *'
 
 jobs:
   run-bot:
