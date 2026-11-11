@@ -10,13 +10,14 @@ def charger_configuration():
 
 def obtenir_tokens(config):
     ig_conf = config["ig"]
+    # Utilisation de la bonne URL Dealing API
     url = f"{ig_conf['base_url']}/session"
     
     headers = {
         "X-IG-API-KEY": ig_conf["api_key"],
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Version": "2"  # Version requise pour la session
+        "Version": "2"
     }
     
     payload = {
@@ -26,15 +27,6 @@ def obtenir_tokens(config):
     
     response = requests.post(url, json=payload, headers=headers)
     
-    print(f"URL appelée : {url}")
-    print(f"Statut HTTP : {response.status_code}")
-    print(f"Content-Type reçu : {response.headers.get('Content-Type')}")
-    
-    # Si la réponse contient du HTML, l'authentification a échoué ou l'URL redirige
-    if "<html" in response.text.lower():
-        print(f"Extrait HTML reçu : {response.text[:300]}")
-        raise Exception("Erreur IG : L'API a renvoyé une page HTML (redirection portail). Vérifie sur le portail développeur IG (labs.ig.com) que ta clé API est active pour l'environnement Démo.")
-        
     if response.status_code == 200:
         cst = response.headers.get("CST")
         x_security_token = response.headers.get("X-SECURITY-TOKEN")
@@ -43,6 +35,45 @@ def obtenir_tokens(config):
     else:
         raise Exception(f"Erreur de connexion : {response.status_code} - {response.text}")
 
+def executer_ordre_knockout(config, cst, x_security_token):
+    ig_conf = config["ig"]
+    trading_conf = config["trading"]
+    
+    # Point d'entrée pour les ordres sur options Knock-Out (positions OTC)
+    url = f"{ig_conf['base_url']}/positions/otc"
+    
+    headers = {
+        "X-IG-API-KEY": ig_conf["api_key"],
+        "CST": cst,
+        "X-SECURITY-TOKEN": x_security_token,
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Version": "2"
+    }
+    
+    payload = {
+        "epic": trading_conf["epic"],
+        "expiry": trading_conf["DATE"],
+        "direction": trading_conf["direction"],
+        "size": trading_conf["size"],
+        "barrier": trading_conf["BARRIER"],
+        "currencyCode": "EUR",
+        "guaranteedStop": True,
+        "orderType": "MARKET"
+    }
+    
+    response = requests.post(url, json=payload, headers=headers)
+    
+    print(f"Statut passage d'ordre : {response.status_code}")
+    print(f"Réponse ordre : {response.text}")
+    
+    if response.status_code == 200:
+        data = response.json()
+        print(f"Ordre transmis avec succès ! Deal Reference : {data.get('dealReference')}")
+    else:
+        print(f"Erreur lors du passage d'ordre : {response.text}")
+
 if __name__ == "__main__":
     config = charger_configuration()
     cst, token = obtenir_tokens(config)
+    executer_ordre_knockout(config, cst, token)
