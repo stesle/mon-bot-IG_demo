@@ -60,7 +60,7 @@ def executer_ordre_knockout(config, cst, x_security_token):
         "currencyCode": "EUR",
         "guaranteedStop": True,
         "orderType": "MARKET",
-        "forceopen": True
+        "forceOpen": True
     }
     
     response = requests.post(url, json=payload, headers=headers)
