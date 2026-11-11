@@ -10,7 +10,7 @@ def charger_configuration():
 
 def obtenir_tokens(config):
     ig_conf = config["ig"]
-    url = f"{ig_conf['base_url']}/session"
+    url = "https://demo-api.ig.com/gateway/rest/session"
     
     headers = {
         "X-IG-API-KEY": ig_conf["api_key"],
