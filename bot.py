@@ -59,7 +59,8 @@ def executer_ordre_knockout(config, cst, x_security_token):
         "currencyCode": "EUR",
         "guaranteedStop": True,
         "orderType": "MARKET",
-        "forceOpen": True
+        "forceOpen": True,
+        "level": trading_conf["BARRIER"]
     }
     
     response = requests.post(url, json=payload, headers=headers)
