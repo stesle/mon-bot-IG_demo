@@ -39,7 +39,6 @@ def executer_ordre_knockout(config, cst, x_security_token):
     ig_conf = config["ig"]
     trading_conf = config["trading"]
     
-    # Point d'entrée pour les ordres sur options Knock-Out (positions OTC)
     url = f"{ig_conf['base_url']}/positions/otc"
     
     headers = {
@@ -62,6 +61,17 @@ def executer_ordre_knockout(config, cst, x_security_token):
         "orderType": "MARKET",
         "forceOpen": True
     }
+    
+    response = requests.post(url, json=payload, headers=headers)
+    
+    print(f"Statut passage d'ordre : {response.status_code}")
+    print(f"Réponse ordre : {response.text}")
+    
+    if response.status_code == 200:
+        data = response.json()
+        print(f"Ordre transmis avec succès ! Deal Reference : {data.get('dealReference')}")
+    else:
+        print(f"Erreur lors du passage d'ordre : {response.text}")
     
     response = requests.post(url, json=payload, headers=headers)
     
