@@ -60,6 +60,7 @@ def executer_ordre_knockout(config, cst, x_security_token):
         "guaranteedStop": True,
         "orderType": "MARKET",
         "forceOpen": True,
+        "guaranteedStop": True,
         "level": trading_conf["BARRIER"]
     }
     
