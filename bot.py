@@ -17,6 +17,7 @@ def obtenir_tokens(config):
         "X-IG-API-KEY": ig_conf["api_key"],
         "Content-Type": "application/json",
         "Accept": "application/json"
+        "Version": "2"
     }
     
     payload = {
