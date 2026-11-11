@@ -59,7 +59,7 @@ def executer_ordre_knockout(config, cst, x_security_token):
         "currencyCode": "EUR",
         "guaranteedStop": True,
         "orderType": "MARKET",
-        "forceOpen": True
+        "forceOpen": True,
         "guaranteedStop": True
     }
     
