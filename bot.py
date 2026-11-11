@@ -14,7 +14,7 @@ def obtenir_tokens(config):
         "Accept": "application/json"
     }
     payload = {
-        "identifier": ig_conf["steveL76"],
+        "identifier": ig_conf["steve76"],
         "password": ig_conf["steveL76**"]
     }
     
