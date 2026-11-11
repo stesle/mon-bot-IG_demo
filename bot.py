@@ -56,12 +56,13 @@ def executer_ordre_knockout(config, cst, x_security_token):
         "direction": trading_conf["direction"],
         "size": float(trading_conf["size"]),
         "barrier": float(trading_conf["BARRIER"]),
-        "level": float(trading_conf["BARRIER"]),  # Niveau d'exécution obligatoire pour l'option Knock-Out
         "currencyCode": "EUR",
-        "orderType": "LIMIT",                     # Les KO s'exécutent via un ordre de type LIMIT lié au niveau de barrière
-        "timeInForce": "EXECUTE_AND_ELIMINATE",   # Exécute immédiatement au niveau ou annule
+        "orderType": "MARKET",
         "forceOpen": True,
-        "guaranteedStop": True
+        "guaranteedStop": True,
+        "level": "",              # Laissé vide pour un ordre au marché pur sur KO
+        "stopDistance": None,     # Géré nativement par la barrière Knock-Out
+        "limitLevel": None
     }
     
     response = requests.post(url, json=payload, headers=headers)
@@ -74,8 +75,6 @@ def executer_ordre_knockout(config, cst, x_security_token):
         print(f"Ordre transmis avec succès ! Deal Reference : {data.get('dealReference')}")
     else:
         print(f"Erreur lors du passage d'ordre : {response.text}")
-    
-    response = requests.post(url, json=payload, headers=headers)
     
     print(f"Statut passage d'ordre : {response.status_code}")
     print(f"Réponse ordre : {response.text}")
