@@ -2,8 +2,8 @@
 # Fichier de configuration centralisé pour le bot de trading IG (Mode Démo)
 
 ig:
-  api_key: "208c91fdac17ebce7fcd019f89ff1e465864b6c3"
-  username: "steveL76"
+  api_key: "c4829dba05d2800b9bf04e9afc5fee18ee27200c"
+  username: "steve76"
   password: "steveL76**"
   base_url: "https://demo-api.ig.com/gateway/rest"
 
