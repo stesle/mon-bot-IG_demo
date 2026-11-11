@@ -9,7 +9,7 @@ def obtenir_tokens(config):
     ig_conf = config["ig"]
     url = f"{ig_conf['base_url']}/session"
     headers = {
-        "X-IG-API-KEY": ig_conf["c4829dba05d2800b9bf04e9afc5fee18ee27200c"],
+        "X-IG-API-KEY": ig_conf["api_key"],
         "Content-Type": "application/json",
         "Accept": "application/json"
     }
