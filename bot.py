@@ -12,12 +12,11 @@ def obtenir_tokens(config):
     ig_conf = config["ig"]
     url = f"{ig_conf['base_url']}/session"
     
-    # Vérifie bien que l'on utilise 'api_key' et non une autre valeur
     headers = {
         "X-IG-API-KEY": ig_conf["api_key"],
         "Content-Type": "application/json",
-        "Accept": "application/json"
-        "Version": "2"
+        "Accept": "application/json",
+        "Version": "2"  # <-- La virgule manquante était ici
     }
     
     payload = {
