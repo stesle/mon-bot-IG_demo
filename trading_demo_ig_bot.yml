@@ -5,7 +5,7 @@ ig:
   api_key: "c4829dba05d2800b9bf04e9afc5fee18ee27200c"
   username: "steve76"
   password: "steveL76**"
-  base_url: "https://demo-api.ig.com/gateway/rest"
+  base_url: "https://demo-api.ig.com/gateway/deal"
 
 trading:
   epic: "IX.D.DAX.OPTCALL.IP"
