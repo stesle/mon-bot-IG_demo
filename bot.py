@@ -38,7 +38,7 @@ def executer_ordre_knockout(config, cst, x_security_token):
     url = f"{ig_conf['base_url']}/positions/v2"
     
     headers = {
-        "X-IG-API-KEY": ig_conf["c4829dba05d2800b9bf04e9afc5fee18ee27200c"],
+        "X-IG-API-KEY": ig_conf["api_key"],
         "CST": cst,
         "X-SECURITY-TOKEN": x_security_token,
         "Content-Type": "application/json",
