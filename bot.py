@@ -16,19 +16,28 @@ def obtenir_tokens(config):
         "X-IG-API-KEY": ig_conf["api_key"],
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Version": "2"  # <-- La virgule manquante était ici
+        "Version": "2"
     }
     
     payload = {
+        "identifiant": ig_conf["username"],  # Attention : certaines versions de l'API utilisent 'identifier'
+        "password": ig_conf["password"]
+    }
+    
+    # Correction de la clé du payload pour l'API IG officielle
+    payload_ig = {
         "identifier": ig_conf["username"],
         "password": ig_conf["password"]
     }
     
-    response = requests.post(url, json=payload, headers=headers)
+    response = requests.post(url, json=payload_ig, headers=headers)
     
     print(f"Statut HTTP reçu : {response.status_code}")
-    print(f"Réponse brute : {response.text}")
     
+    # Si la réponse commence par '<', c'est du HTML (page d'erreur ou de redirection IG)
+    if response.text.strip().startswith("<"):
+        raise Exception("Erreur IG : L'API a renvoyé une page Web HTML au lieu du JSON. Vérifie l'URL de base et ta clé API.")
+        
     if response.status_code == 200:
         cst = response.headers.get("CST")
         x_security_token = response.headers.get("X-SECURITY-TOKEN")
