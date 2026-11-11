@@ -2,15 +2,9 @@ import os
 import yaml
 import requests
 
-def charger_configuration():
-    dossier_script = os.path.dirname(os.path.abspath(__file__))
-    chemin_fichier = os.path.join(dossier_script, "trading_demo_ig_bot.yml")
-    with open(chemin_fichier, "r", encoding="utf-8") as f:
-        return yaml.safe_load(f)
-
 def obtenir_tokens(config):
     ig_conf = config["ig"]
-    url = "https://demo-api.ig.com/gateway/rest/session"
+    url = f"{ig_conf['base_url']}/session"
     
     headers = {
         "X-IG-API-KEY": ig_conf["api_key"],
@@ -20,23 +14,20 @@ def obtenir_tokens(config):
     }
     
     payload = {
-        "identifiant": ig_conf["username"],  # Attention : certaines versions de l'API utilisent 'identifier'
-        "password": ig_conf["password"]
-    }
-    
-    # Correction de la clé du payload pour l'API IG officielle
-    payload_ig = {
         "identifier": ig_conf["username"],
         "password": ig_conf["password"]
     }
     
-    response = requests.post(url, json=payload_ig, headers=headers)
+    response = requests.post(url, json=payload, headers=headers)
     
-    print(f"Statut HTTP reçu : {response.status_code}")
+    print(f"URL appelée : {url}")
+    print(f"Statut HTTP : {response.status_code}")
+    print(f"Content-Type reçu : {response.headers.get('Content-Type')}")
+    print(f"Début de la réponse : {response.text[:150]}")
     
-    # Si la réponse commence par '<', c'est du HTML (page d'erreur ou de redirection IG)
-    if response.text.strip().startswith("<"):
-        raise Exception("Erreur IG : L'API a renvoyé une page Web HTML au lieu du JSON. Vérifie l'URL de base et ta clé API.")
+    # Si le type de contenu n'est pas du JSON, c'est que l'on touche la mauvaise URL
+    if "application/json" not in response.headers.get("Content-Type", ""):
+        raise Exception(f"Erreur : L'API IG a bloqué la requête ou redirigé vers du HTML. Vérifie ton URL de base dans le fichier YAML.")
         
     if response.status_code == 200:
         cst = response.headers.get("CST")
