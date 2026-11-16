@@ -10,7 +10,7 @@ ig:
 trading:
   epic: "IX.D.DAX.OPTCALL.IP"
   DATE: "FEB-27"               # Échéance du produit barrière (ex: FEB-27)
-  BARRIER: 25750.0             # Niveau de barrière actif pour l'ordre
-  DEFAULT_BARRIERE: 25750.0    # Niveau de barrière par défaut / de référence
+  BARRIER: 25750               # Niveau de barrière actif pour l'ordre
+  DEFAULT_BARRIERE: 25750      # Niveau de barrière par défaut / de référence
   size: 1.2                    # Taille du contrat (lots)
   direction: "BUY"             # Sens de l'opération (BUY pour Call/Bull, SELL pour Put/Bear)
