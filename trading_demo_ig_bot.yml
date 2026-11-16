@@ -4,7 +4,7 @@
 ig:
   IG_API_KEY: ${{ secrets.IG_DEMO_KEY }}
   IG_USERNAME: ${{ secrets.IG_ID_DEMO }}
-  IG_PASSWORD: ${{ secrets.IG_PASSWORD_DEMO }
+  IG_PASSWORD: ${{ secrets.IG_PASSWORD_DEMO }}
   base_url: "https://demo-api.ig.com/gateway/deal"
 
 trading:
