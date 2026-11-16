@@ -63,7 +63,7 @@ def executer_ordre_knockout(config, cst, x_security_token):
         "level": "",              # Laissé vide pour un ordre au marché pur sur KO
         "stopDistance": None,     # Géré nativement par la barrière Knock-Out
         "limitDistance": 60,
-        "trailingStop": false
+        "trailingStop": 'False'
     }
     
     response = requests.post(url, json=payload, headers=headers)
