@@ -2,9 +2,9 @@
 # Fichier de configuration centralisé pour le bot de trading IG (Mode Démo)
 
 ig:
-  api_key: "IG_DEMO_KEY"
-  username: "IG_ID_DEMO"
-  password: "IG_PASSWORD_DEMO**"
+  api_key: "${IG_API_KEY}"
+  username: "${IG_USERNAME}"
+  password: "${IG_PASSWORD}"
   base_url: "https://demo-api.ig.com/gateway/deal"
 
 trading:
