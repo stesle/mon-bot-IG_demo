@@ -77,9 +77,9 @@ class Config:
     def from_env(cls) -> "Config":
         cfg = cls()
         # Connexion IG (remplaces par les secrets GitHub Actions)
-        cfg.ig_api_key = env_str("IG_API_KEY")
-        cfg.ig_username = env_str("IG_USERNAME")
-        cfg.ig_password = env_str("IG_PASSWORD")
+        cfg.ig_api_key = env_str("IG_DEMO_KEY")
+        cfg.ig_username = env_str("IG_ID_DEMO")
+        cfg.ig_password = env_str("IG_PASSWORD_DEMO")
         cfg.ig_base_url = env_str("IG_BASE_URL", "https://demo-api.ig.com/gateway/deal")
 
         # Marche surveille / negociation
