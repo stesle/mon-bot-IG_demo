@@ -1,0 +1,45 @@
+
+name: Trading Bot IG Demo
+
+on:
+  workflow_dispatch:
+
+jobs:
+  trading:
+    runs-on: ubuntu-latest
+
+    # Correspondance entre les secrets GitHub et les variables
+    # d'environnement utilisées par bot_ig.py
+    env:
+      IG_API_KEY: ${{ secrets.IG_DEMO_KEY }}
+      IG_USERNAME: ${{ secrets.IG_ID_DEMO }}
+      IG_PASSWORD: ${{ secrets.IG_PASSWORD_DEMO }}
+
+    steps:
+      # Récupération du code du dépôt
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Installation de Python
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # Installation des bibliothèques nécessaires
+      - name: Installer les dépendances
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests pyyaml
+
+      # Vérification de la présence des variables secrètes
+      - name: Vérifier la configuration
+        run: |
+          test -n "$IG_API_KEY" || (echo "Secret IG_DEMO_KEY manquant" && exit 1)
+          test -n "$IG_USERNAME" || (echo "Secret IG_ID_DEMO manquant" && exit 1)
+          test -n "$IG_PASSWORD" || (echo "Secret IG_PASSWORD_DEMO manquant" && exit 1)
+          echo "Configuration des secrets OK"
+
+      # Lancement du bot
+      - name: Lancer le bot IG
+        run: python bot_ig.py
